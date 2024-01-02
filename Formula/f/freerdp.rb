@@ -1,8 +1,8 @@
 class Freerdp < Formula
   desc "X11 implementation of the Remote Desktop Protocol (RDP)"
   homepage "https://www.freerdp.com/"
-  url "https://github.com/FreeRDP/FreeRDP/archive/refs/tags/2.11.2.tar.gz"
-  sha256 "674b5600bc2ae3e16e5b5a811c7d5b0daaff6198601ba278bd15b4cb9b281044"
+  url "https://github.com/FreeRDP/FreeRDP/archive/refs/tags/3.1.0.tar.gz"
+  sha256 "22751fdbc91d4fc00432c3e55e42b67a9710fa3929c3edaeb70304cf8227c02d"
   license "Apache-2.0"
 
   bottle do
@@ -23,7 +23,13 @@ class Freerdp < Formula
   end
 
   depends_on "cmake" => :build
+  # docbook-xsl just needed for manpages
+  depends_on "docbook-xsl" => :build
   depends_on "pkg-config" => :build
+  depends_on "pkcs11-helper" => :build
+  depends_on "sdl2" => :build
+  depends_on "sdl2_image" => :build
+  depends_on "sdl2_ttf" => :build
   depends_on "jpeg-turbo"
   depends_on "libusb"
   depends_on "libx11"
@@ -52,7 +58,13 @@ class Freerdp < Formula
                     "-DWITH_X11=ON",
                     "-DBUILD_SHARED_LIBS=ON",
                     "-DWITH_JPEG=ON",
-                    "-DCMAKE_INSTALL_NAME_DIR=#{lib}"
+                    "-DCMAKE_INSTALL_NAME_DIR=#{lib}",
+                    "-DDOCBOOKXSL_DIR=#{lib}",
+                    "-DCMAKE_VERBOSE_MAKEFILE=ON",
+                    "-DCMAKE_BUILD_TYPE=Release",
+                    # TODO: reenable manpages once we can figure out the right DOCBOOKXSL_DIR value
+                    "-DWITH_MANPAGES=OFF",
+                    "-DWITH_WEBVIEW=OFF"
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
   end
