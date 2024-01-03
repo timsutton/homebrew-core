@@ -1,11 +1,14 @@
 class Reminiscence < Formula
   desc "Flashback engine reimplementation"
   homepage "http://cyxdown.free.fr/reminiscence/"
-  # A mirror is used as the primary URL because the official one rate limits
-  # too heavily that CI almost always fails.
-  url "https://pkg.freebsd.org/ports-distfiles/REminiscence-0.5.1.tar.bz2"
-  mirror "http://cyxdown.free.fr/reminiscence/REminiscence-0.5.1.tar.bz2"
-  sha256 "6b02b8568a75af5fbad3b123d2efe033614091d83f128bc7f3b8b533db6e4b29"
+  url "https://github.com/cyxx/REminiscence/archive/refs/tags/0.5.2.tar.gz"
+  sha256 "e7ccfe348024dd7a0d893bac1d0b3efd04bf94f7cf0dd5335b23d154c826af96"
+
+  # The official URL is used only as a mirror because it rate limits too
+  # heavily that CI almost always fails.
+  mirror "http://cyxdown.free.fr/reminiscence/REminiscence-0.5.2.tar.bz2" do
+    sha256 "86874e1163451ae499f470a216d6c1f92097f769b968bf289a3e343eb7a5a3cf"
+  end
 
   livecheck do
     url :homepage
