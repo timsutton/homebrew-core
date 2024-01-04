@@ -21,6 +21,7 @@ class CassandraAT3 < Formula
   # Due to Python 2 (https://issues.apache.org/jira/browse/CASSANDRA-10190), cassandra 4 will support python3
   depends_on :macos
   depends_on "openjdk@8" # cassandra 4 will support Java 11
+  depends_on "six"
 
   # Only >=Yosemite has new enough setuptools for successful compile of the below deps.
   # Python 2 needs setuptools < 45.0.0 (https://github.com/pypa/setuptools/issues/2094)
@@ -32,11 +33,6 @@ class CassandraAT3 < Formula
   resource "futures" do
     url "https://files.pythonhosted.org/packages/47/04/5fc6c74ad114032cd2c544c575bffc17582295e9cd6a851d6026ab4b2c00/futures-3.3.0.tar.gz"
     sha256 "7e033af76a5e35f58e56da7a91e687706faf4e7bdfb2cbc3f2cca6b9bcda9794"
-  end
-
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/6b/34/415834bfdafca3c5f451532e8a8d9ba89a21c9743a0c59fbd0205c7f9426/six-1.15.0.tar.gz"
-    sha256 "30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"
   end
 
   # thrift==0.9.3
