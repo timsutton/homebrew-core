@@ -23,6 +23,7 @@ class Statik < Formula
 
   depends_on "libpq"
   depends_on "python@3.9"
+  depends_on "six"
 
   uses_from_macos "libffi"
 
@@ -160,11 +161,6 @@ class Statik < Formula
   resource "requests" do
     url "https://files.pythonhosted.org/packages/f5/4f/280162d4bd4d8aad241a21aecff7a6e46891b905a4341e7ab549ebaf7915/requests-2.23.0.tar.gz"
     sha256 "b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"
-  end
-
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/6b/34/415834bfdafca3c5f451532e8a8d9ba89a21c9743a0c59fbd0205c7f9426/six-1.15.0.tar.gz"
-    sha256 "30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"
   end
 
   resource "SQLAlchemy" do
