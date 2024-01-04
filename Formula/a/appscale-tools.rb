@@ -21,6 +21,7 @@ class AppscaleTools < Formula
   depends_on "libyaml"
   depends_on :macos # Due to Python 2 (Uses SOAPPy, which does not support Python 3)
   depends_on "openssl@1.1"
+  depends_on "six"
 
   uses_from_macos "libffi"
   uses_from_macos "ssh-copy-id"
@@ -101,11 +102,6 @@ class AppscaleTools < Formula
   resource "rsa" do
     url "https://files.pythonhosted.org/packages/14/89/adf8b72371e37f3ca69c6cb8ab6319d009c4a24b04a31399e5bd77d9bb57/rsa-3.4.2.tar.gz"
     sha256 "25df4e10c263fb88b5ace923dd84bf9aa7f5019687b5e55382ffcdb8bede9db5"
-  end
-
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
-    sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
   end
 
   resource "httplib2" do
