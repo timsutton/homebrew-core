@@ -1,8 +1,8 @@
 class Lune < Formula
   desc "Standalone Luau script runtime"
   homepage "https://lune-org.github.io/docs"
-  url "https://github.com/filiptibell/lune/archive/refs/tags/v0.7.11.tar.gz"
-  sha256 "ceb7832821a15d36bf5c2821f18dfa07d7d597b0699e2e3f9918115b8baa733b"
+  url "https://github.com/filiptibell/lune/archive/refs/tags/v0.8.0.tar.gz"
+  sha256 "6008829cb9d7fc8ddaeeea3866e9264ce6f6c2f3487f3b6a3f8aa21dfad05a30"
   license "MPL-2.0"
 
   bottle do
@@ -23,6 +23,6 @@ class Lune < Formula
 
   test do
     (testpath/"test.lua").write("print(2 + 2)")
-    assert_equal "4", shell_output("#{bin}/lune test.lua").chomp
+    assert_equal "4", shell_output("#{bin}/lune run test.lua").chomp
   end
 end
