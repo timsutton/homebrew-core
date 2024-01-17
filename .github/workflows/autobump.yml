@@ -661,6 +661,7 @@ env:
     git-town
     gitbackup
     gitbucket
+    gitea
     gitlab-runner
     gitleaks
     gitql
@@ -723,6 +724,7 @@ env:
     hive
     hivemind
     hledger
+    hoverfly
     hpack
     htmldoc
     htmlq
