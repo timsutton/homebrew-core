@@ -1,8 +1,8 @@
 class Srecord < Formula
   desc "Tools for manipulating EPROM load files"
   homepage "https://srecord.sourceforge.net/"
-  url "https://downloads.sourceforge.net/project/srecord/srecord/1.64/srecord-1.64.tar.gz"
-  sha256 "49a4418733c508c03ad79a29e95acec9a2fbc4c7306131d2a8f5ef32012e67e2"
+  url "https://downloads.sourceforge.net/project/srecord/srecord/1.65/srecord-1.65.0-Source.tar.gz"
+  sha256 "81c3d07cf15ce50441f43a82cefd0ac32767c535b5291bcc41bd2311d1337644"
   license all_of: ["GPL-3.0-or-later", "LGPL-3.0-or-later"]
 
   bottle do
@@ -22,34 +22,44 @@ class Srecord < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux:   "2ccca42765c5c335dd26b2be5ad0a30b95d279e59958c89950d8cdbb5321816f"
   end
 
-  depends_on "boost" => :build
+  # depends_on "boost" => :build
+  depends_on "cmake" => :build
   depends_on "libtool" => :build
+  # depends_on "doxygen" => :build
   depends_on "libgcrypt"
 
-  on_sonoma :or_newer do
-    depends_on "ghostscript" => :build # for ps2pdf
-  end
+  patch :DATA
+  # on_sonoma :or_newer do
+  #   depends_on "ghostscript" => :build # for ps2pdf
+  # end
 
-  on_ventura :or_newer do
-    depends_on "groff" => :build
-  end
+  # on_ventura :or_newer do
+  #   depends_on "groff" => :build
+  # end
 
-  on_linux do
-    depends_on "ghostscript" => :build # for ps2pdf
-    depends_on "groff" => :build
-  end
+  # on_linux do
+  #   depends_on "ghostscript" => :build # for ps2pdf
+  #   depends_on "groff" => :build
+  # end
 
   # Use macOS's pstopdf
-  patch do
-    on_ventura :or_older do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/85fa66a9/srecord/1.64.patch"
-      sha256 "140e032d0ffe921c94b19145e5904538233423ab7dc03a9c3c90bf434de4dd03"
-    end
-  end
+  # patch do
+  #   on_sonoma :or_older do
+  #     url "https://raw.githubusercontent.com/Homebrew/formula-patches/85fa66a9/srecord/1.64.patch"
+  #     sha256 "140e032d0ffe921c94b19145e5904538233423ab7dc03a9c3c90bf434de4dd03"
+  #   end
+  # end
 
   def install
-    system "./configure", *std_configure_args, "LIBTOOL=glibtool"
-    system "make", "install"
+    # system "./configure", *std_configure_args, "LIBTOOL=glibtool"
+    # system "make", "install"
+    system "cmake", "-S", ".", "-B", "build",
+                    *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
+    rm lib/'libgcrypt.20.dylib'
+    rm lib/'libgpg-error.0.dylib'
+    rm lib/'libintl.8.dylib'
   end
 
   test do
@@ -74,3 +84,47 @@ class Srecord < Formula
     assert_match version.major_minor.to_s, shell_output("#{bin}/srec_info --version")
   end
 end
+__END__
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea7f41e6..e4467982 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,11 +29,11 @@ include(InstallRequiredSystemLibraries)
+ # Support standard install locations
+ include(GNUInstallDirs)
+ 
+-# FHS compliant paths for Linux installation
+-if(NOT WIN32 AND CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+-#  set(CMAKE_INSTALL_PREFIX "/opt/${PROJECT_NAME}")
+-  set(CMAKE_INSTALL_PREFIX "/usr")
+-endif()
++# # FHS compliant paths for Linux installation
++# if(NOT WIN32 AND CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
++# #  set(CMAKE_INSTALL_PREFIX "/opt/${PROJECT_NAME}")
++#   set(CMAKE_INSTALL_PREFIX "/usr")
++# endif()
+ 
+ # Pull in the rest of the pieces
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/etc")
+@@ -55,7 +55,7 @@ enable_testing()
+ add_subdirectory(test)
+ 
+ # Documentation & Man Pages
+-add_subdirectory(doc)
++# add_subdirectory(doc)
+ 
+ # Package SRecord
+ include(CPack)
+diff --git a/etc/configure.cmake b/etc/configure.cmake
+index 343a70a2..955fafc1 100644
+--- a/etc/configure.cmake
++++ b/etc/configure.cmake
+@@ -104,7 +104,7 @@ option(_TANDEM_SOURCE ON)
+ option(__EXTENSIONS__ ON)
+ 
+ # Doxygen configuration
+-find_package(Doxygen REQUIRED doxygen dot)
++find_package(Doxygen REQUIRED doxygen)
+ 
+ set(DOXYGEN_DOT_GRAPH_MAX_NODES 150)
+ set(DOXYGEN_ALPHABETICAL_INDEX NO)
