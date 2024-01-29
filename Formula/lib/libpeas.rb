@@ -1,8 +1,8 @@
 class Libpeas < Formula
   desc "GObject plugin library"
   homepage "https://wiki.gnome.org/Projects/Libpeas"
-  url "https://download.gnome.org/sources/libpeas/1.36/libpeas-1.36.0.tar.xz"
-  sha256 "297cb9c2cccd8e8617623d1a3e8415b4530b8e5a893e3527bbfd1edd13237b4c"
+  url "https://download.gnome.org/sources/libpeas/2.0/libpeas-2.0.1.tar.xz"
+  sha256 "9ddc1d51f38663da4df52163051b7b2cea3a242cfaee9f5a7e140f0784c8aa77"
   license "LGPL-2.1-or-later"
   revision 1
 
@@ -16,15 +16,25 @@ class Libpeas < Formula
     sha256 x86_64_linux:   "baa8d94412cd5d63a202de7a2935cfc8aba6879563077f676b59655e2d42bb5a"
   end
 
+  depends_on "cmake" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "vala" => :build
+  depends_on "gjs"
   depends_on "glib"
   depends_on "gobject-introspection"
   depends_on "gtk+3"
   depends_on "pygobject3"
   depends_on "python@3.12"
+  # need distutils but maybe only for build? it's due to python scripts as part of gobject-introspection
+  # tasks
+  depends_on "python-setuptools" => :build
+
+  # resource "setuptools" do
+  #   url "https://files.pythonhosted.org/packages/fc/c9/b146ca195403e0182a374e0ea4dbc69136bad3cd55bc293df496d625d0f7/setuptools-69.0.3.tar.gz"
+  #   sha256 "be1af57fc409f93647f2e8e4573a142ed38724b8cdd389706a867bb4efcf1e78"
+  # end
 
   def install
     pyver = Language::Python.major_minor_version "python3.12"
@@ -35,8 +45,7 @@ class Libpeas < Formula
       -Dpython3=true
       -Dintrospection=true
       -Dvapi=true
-      -Dwidgetry=true
-      -Ddemos=false
+      -Dlua51=false
     ]
 
     system "meson", "setup", "build", *args, *std_meson_args
