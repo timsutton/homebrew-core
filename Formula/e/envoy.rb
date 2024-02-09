@@ -1,10 +1,20 @@
 class Envoy < Formula
   desc "Cloud-native high-performance edge/middle/service proxy"
   homepage "https://www.envoyproxy.io/index.html"
-  url "https://github.com/envoyproxy/envoy/archive/refs/tags/v1.28.0.tar.gz"
-  sha256 "c5628b609ef9e5fafe872b8828089a189bfbffb6e261b8c4d34eff4c65229a3f"
   license "Apache-2.0"
   head "https://github.com/envoyproxy/envoy.git", branch: "main"
+
+  stable do
+    url "https://github.com/envoyproxy/envoy/archive/refs/tags/v1.29.0.tar.gz"
+    sha256 "cc5704a80111b322e461616fb5d59f76d5995129480174eab886b04dbadc6c9d"
+
+    # Remove on next release:
+    # Patch fixing compilation on macOS, backported into 1.29.0's release branch but no new tag published
+    patch do
+      url "https://github.com/envoyproxy/envoy/commit/2cc41dcd321dab2356f29cd5902db65c97675291.patch?full_index=1"
+      sha256 "03c75eaa23f54bb089cb8ba096ed683256987e6711ddb7c3cc62fd9e15beeb2d"
+    end
+  end
 
   livecheck do
     url :stable
@@ -42,6 +52,10 @@ class Envoy < Formula
     version "8"
     cause "C++17 support and tcmalloc requirement"
   end
+
+  # Remove this patch when this is landed (or resolved) in a release:
+  # https://github.com/envoyproxy/envoy/pull/32148
+  patch :DATA
 
   def install
     # Per https://luajit.org/install.html: If MACOSX_DEPLOYMENT_TARGET
@@ -103,3 +117,33 @@ class Envoy < Formula
     assert_match "HEALTHY", shell_output("curl -s 127.0.0.1:#{port}/clusters?format=json")
   end
 end
+__END__
+diff --git a/bazel/cel-cpp.patch b/bazel/cel-cpp.patch
+index 5f674379781b9..f0d7d3005be74 100644
+--- a/bazel/cel-cpp.patch
++++ b/bazel/cel-cpp.patch
+@@ -1,3 +1,24 @@
++diff --git a/eval/internal/interop.cc b/eval/internal/interop.cc
++index 3acde6c..20f8ea3 100644
++--- a/eval/internal/interop.cc
+++++ b/eval/internal/interop.cc
++@@ -729,13 +729,14 @@ absl::StatusOr<CelValue> ToLegacyValue(google::protobuf::Arena* arena,
++         return CelValue::CreateMessageWrapper(
++             MessageWrapperAccess::Make(message, type_info));
++       }
++-      if (ProtoStructValueToMessageWrapper) {
+++      // This weak symbol is never defined in Envoy, and checking it causes linker failures on macOS
+++      /*if (ProtoStructValueToMessageWrapper) {
++         auto maybe_message_wrapper = ProtoStructValueToMessageWrapper(*value);
++         if (maybe_message_wrapper.has_value()) {
++           return CelValue::CreateMessageWrapper(
++               std::move(maybe_message_wrapper).value());
++         }
++-      }
+++      }*/
++       return absl::UnimplementedError(
++           "only legacy struct types and values can be used for interop");
++     }
+ diff --git a/eval/public/cel_value.cc b/eval/public/cel_value.cc
+ index 6aeff6d..c43864c 100644
+ --- a/eval/public/cel_value.cc
