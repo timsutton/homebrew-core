@@ -20,22 +20,16 @@ class Duplicity < Formula
   depends_on "gettext" => :build # for msgfmt
   depends_on "rust" => :build # for bcrypt
   depends_on "gnupg"
-  depends_on "keyring"
   depends_on "librsync"
+  depends_on "libyaml"
   depends_on "protobuf"
   depends_on "python-certifi"
   depends_on "python-cryptography"
-  depends_on "python-dateutil"
-  depends_on "python-lxml"
-  depends_on "python-packaging"
-  depends_on "python-ply"
-  depends_on "python-psutil"
-  depends_on "python-pyparsing"
-  depends_on "python-pytz"
-  depends_on "python-typing-extensions"
   depends_on "python@3.12"
-  depends_on "pyyaml"
-  depends_on "six"
+
+  uses_from_macos "libffi"
+  uses_from_macos "libxml2", since: :ventura
+  uses_from_macos "libxslt"
 
   resource "args" do
     url "https://files.pythonhosted.org/packages/e5/1c/b701b3f4bd8d3667df8342f311b3efaeab86078a840fb826bd204118cc6b/args-0.1.0.tar.gz"
@@ -359,10 +353,10 @@ class Duplicity < Formula
 
   # Using GitHub tarball as requirements.txt is missing from PyPI tarball.
   # Issue ref: https://github.com/dropbox/stone/issues/266
-  resource "stone" do
-    url "https://github.com/dropbox/stone/archive/refs/tags/v3.3.1.tar.gz"
-    sha256 "dc5aff3fad1333188d4ddb4eee0a19d31e6262bb3cdf10c0bbdaeb309ff91a52"
-  end
+  # resource "stone" do
+  #   url "https://github.com/dropbox/stone/archive/refs/tags/v3.3.1.tar.gz"
+  #   sha256 "dc5aff3fad1333188d4ddb4eee0a19d31e6262bb3cdf10c0bbdaeb309ff91a52"
+  # end
 
   resource "tlslite-ng" do
     url "https://files.pythonhosted.org/packages/cd/95/4311e6b70ded82035b7f3a92bfe5ea350e6d9effe925493ac31ccaf924cc/tlslite-ng-0.7.6.tar.gz"

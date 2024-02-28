@@ -221,17 +221,9 @@
   },
   "duplicity": {
     "extra_packages": [
-      "atom", "azure-storage-blob", "b2sdk", "boto3", "botocore", "boxsdk[jwt]",
-      "dropbox", "fasteners", "gdata-python3", "google-api-python-client",
-      "google-auth-oauthlib", "httplib2", "jottalib", "megatools",
-      "paramiko", "pexpect", "pydrive2",
-      "python-swiftclient[keystone]", "requests[security]", "requests-oauthlib"
+      
     ],
-    "exclude_packages": [
-      "certifi", "cffi", "cryptography", "keyring", "lxml", "packaging", "ply",
-      "protobuf", "psutil", "pycparser", "pyparsing", "python-dateutil", "pytz", "PyYAML",
-      "six", "typing-extensions"
-    ]
+    "exclude_packages": ["certifi", "cryptography"]
   },
   "dvc": {
     "package_name": "dvc[all]",
