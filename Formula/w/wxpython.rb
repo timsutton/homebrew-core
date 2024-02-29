@@ -25,7 +25,6 @@ class Wxpython < Formula
   depends_on "numpy"
   depends_on "pillow"
   depends_on "python@3.11"
-  depends_on "six"
   depends_on "wxwidgets"
   uses_from_macos "flex" => :build, since: :big_sur # for `doxygen` resource
 
@@ -40,6 +39,11 @@ class Wxpython < Formula
     url "https://doxygen.nl/files/doxygen-1.9.6.src.tar.gz"
     mirror "https://downloads.sourceforge.net/project/doxygen/rel-1.9.6/doxygen-1.9.6.src.tar.gz"
     sha256 "297f8ba484265ed3ebd3ff3fe7734eb349a77e4f95c8be52ed9977f51dea49df"
+  end
+
+  resource "six" do
+    url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
+    sha256 "1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"
   end
 
   def python
