@@ -283,8 +283,8 @@
   },
   "gimme-aws-creds": {
     "package_name": "gimme-aws-creds",
-    "exclude_packages": ["certifi", "cffi", "cryptography", "keyring", "six"],
-    "extra_packages": ["pyobjc-framework-localauthentication"]
+    "exclude_packages": ["certifi", "cryptography"],
+    "extra_packages": ["jeepney", "pyobjc-framework-localauthentication", "secretstorage"]
   },
   "git-review": {
     "exclude_packages": ["certifi"]
