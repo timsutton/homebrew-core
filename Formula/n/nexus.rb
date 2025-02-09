@@ -1,8 +1,8 @@
 class Nexus < Formula
   desc "Repository manager for binary software components"
   homepage "https://www.sonatype.org/"
-  url "https://github.com/sonatype/nexus-public/archive/refs/tags/release-3.38.1-01.tar.gz"
-  sha256 "83b3a39e4d350d9786ce47410607fdd9ec04fca4f8451c0a763d8e22c5639e87"
+  url "https://github.com/sonatype/nexus-public/archive/refs/tags/release-3.77.1-01.tar.gz"
+  sha256 "dd31a34ffed2d50aa703551113847b9abd7c015bba2f6d09d46f176a25d5ab5c"
   license "EPL-1.0"
 
   # As of writing, upstream is publishing both v2 and v3 releases. The "latest"
@@ -23,13 +23,20 @@ class Nexus < Formula
   end
 
   depends_on "maven" => :build
-  depends_on arch: :x86_64 # openjdk@8 is not supported on ARM
-  depends_on "openjdk@8"
+  depends_on "yarn" => :build
+  depends_on "openjdk@17"
 
   uses_from_macos "unzip" => :build
 
   def install
-    ENV["JAVA_HOME"] = Formula["openjdk@8"].opt_prefix
+    ENV["JAVA_HOME"] = Formula["openjdk@17"].opt_prefix
+
+    # HACK: should have a better way to get the groovy-eclipse-batch dependency
+    # https://github.com/sonatype/nexus-public/issues/504 and https://github.com/sonatype/nexus-public/issues/525
+    inreplace "pom.xml", "3.0.13-02", "3.0.8-01"
+
+    # TODO: npm dependencies also can't install properly: https://github.com/sonatype/nexus-public/issues/417
+
     system "mvn", "install", "-DskipTests"
     system "unzip", "-o", "-d", "target", "assemblies/nexus-base-template/target/nexus-base-template-#{version}.zip"
 
@@ -38,7 +45,7 @@ class Nexus < Formula
     libexec.install Dir["target/nexus-base-template-#{version}/*"]
 
     env = {
-      JAVA_HOME:  Formula["openjdk@8"].opt_prefix,
+      JAVA_HOME:  Formula["openjdk@17"].opt_prefix,
       KARAF_DATA: "${NEXUS_KARAF_DATA:-#{var}/nexus}",
       KARAF_LOG:  "#{var}/log/nexus",
       KARAF_ETC:  "#{etc}/nexus",
